@@ -119,14 +119,14 @@ public class DynamicDataDemo extends JFrame /*extends ApplicationFrame*/ /* impl
 	    };
 	    addWindowListener(wndCloser);
 	   */ 
-        WindowListener wndCloser = new WindowAdapter() {
+        /*WindowListener wndCloser = new WindowAdapter() {
 	    	public void windowClosing(WindowEvent e) {
 	    			System.out.println("Exit");   		
                     e.getWindow().setVisible(false);
                     System.exit(0);
 	        }
 	    };
-	    addWindowListener(wndCloser);
+	    addWindowListener(wndCloser);*/
     }
 
 

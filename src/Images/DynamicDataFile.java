@@ -46,6 +46,7 @@ public class DynamicDataFile extends DynamicDataDemo{
 	public DynamicDataFile(String title) {
 		
 		super(title);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JPanel bttns = new JPanel(new BorderLayout());
 		
@@ -113,9 +114,18 @@ public class DynamicDataFile extends DynamicDataDemo{
         
         br.readLine(); // ignore header
 
-        while ((line = br.readLine()) != null && !line.isEmpty()) {
+        while ((line = br.readLine()) != null) {
+        	
+        	if(line.isEmpty())
+        		continue;
         	
             String[] fields = line.split(",");
+            
+            // skip class label
+            // TO DO: handle it by the another way
+            if(fields.length == 1)
+            	continue;
+            
             int timeStamp = Integer.parseInt(fields[0]);
             if(timeStamp <= upperBound && timeStamp >= lowerBound) {
             Date timePadding = new Date(timeStamp);
