@@ -1,6 +1,6 @@
 package InterfaceVariable;
 
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -32,12 +32,12 @@ public class LoggerInterface extends JFrame{
 				// fear and interest?...
 		};
 		
-		JPanel logPane = new JPanel(new GridLayout(0, 2, 10, 20));  
-        //panel.setBackground(Color.white);
+		JPanel logPane = new JPanel(new GridLayout(0, 2, 10, 20));
 
 		final JTextField usrInput = new JTextField();
 		final JLabel usrLbl = new JLabel("Username:"),
 		sessionLbl = new JLabel("Session0");
+		sessionLbl.setHorizontalAlignment(SwingConstants.CENTER);
         
         final JComboBox labelList = new JComboBox(emoLabels);
         final JLabel listLbl = new JLabel("Class label");
@@ -109,7 +109,6 @@ public class LoggerInterface extends JFrame{
         JPanel usrPane = new JPanel(new GridLayout(1, 3, 5, 5));
         usrPane.add(usrLbl);
         usrPane.add(usrInput);
-		usrPane.add(sessionLbl);
         
         JPanel labelsPane = new JPanel(new GridLayout(0, 2, 5, 5));
         labelsPane.add(listLbl);
@@ -117,7 +116,7 @@ public class LoggerInterface extends JFrame{
         labelsPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         logPane.add(usrPane);
-        //logPane.add(sessionLbl);
+        logPane.add(sessionLbl);
         logPane.add(labelsPane);
         logPane.add(time);
         
@@ -125,15 +124,11 @@ public class LoggerInterface extends JFrame{
         logPane.add(showBtt);
         
         logPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); 
-        logPane.setSize(400, 150);
+        logPane.setSize(500, 150);
         add(logPane);
-        
-        // user settings
-        //JPanel settingsPane = new JPanel();
-        
-        setSize(450, 400);
-        //setPreferredSize(new Dimension(512, 256));
-        //pack();
+
+        setPreferredSize(new Dimension(512, 256));
+        pack();
         setVisible(true);
         
 	}
