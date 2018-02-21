@@ -25,13 +25,11 @@ import javax.swing.border.TitledBorder;
 
 
 
-import ExampleAPIFiles.Edk;
-import ExampleAPIFiles.EmoLogger;
-import ExampleAPIFiles.EmoProfile;
-import ExampleAPIFiles.EmoState;
-import ExampleAPIFiles.Variable;
-import Commands.Commands;
-import InterfaceVariable.InterfaceVariables;
+import EmotivAPIFiles.Edk;
+import EmotivAPIFiles.EmoLogger;
+import EmotivAPIFiles.EmoProfile;
+import EmotivAPIFiles.EmoState;
+import EmotivAPIFiles.Variable;
 
 public class Interface extends JFrame{
 	public static XMLOptions xmlOptions = new XMLOptions();

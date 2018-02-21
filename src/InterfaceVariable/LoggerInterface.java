@@ -1,34 +1,21 @@
 package InterfaceVariable;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.Timer;
+import javax.swing.*;
 
-import org.jfree.ui.RefineryUtilities;
-
-import ExampleAPIFiles.EmoLogger;
-import Images.DynamicDataFile;
+import EmotivAPIFiles.EmoLogger;
+import InterfaceVariable.InterfaceVariables;
 
 public class LoggerInterface extends JFrame{
 	
-	private int cnt = 0;
+	private int cnt = 0, sNumber = 0;
 	
 	public LoggerInterface() {
 		
@@ -37,17 +24,20 @@ public class LoggerInterface extends JFrame{
 		setLayout(null);
 		
 		String[] emoLabels = {
-				"fear",
-				"happiness",
-				"calmness",
-				"sadness",
-				"interest",
-				"disgust"
-				// and so on...
+				"emotion1", // aka happiness
+				"emotion2", // aka calmness
+				"emotion3", // aka sadness
+				"emotion4", // aka disgust
+				"emotion5" // aka anger
+				// fear and interest?...
 		};
 		
 		JPanel logPane = new JPanel(new GridLayout(0, 2, 10, 20));  
         //panel.setBackground(Color.white);
+
+		final JTextField usrInput = new JTextField();
+		final JLabel usrLbl = new JLabel("Username:"),
+		sessionLbl = new JLabel("Session0");
         
         final JComboBox labelList = new JComboBox(emoLabels);
         final JLabel listLbl = new JLabel("Class label");
@@ -63,7 +53,6 @@ public class LoggerInterface extends JFrame{
 				}
 			}
 		});
-        
         timer.setInitialDelay(0);
         timer.start();
         
@@ -76,13 +65,15 @@ public class LoggerInterface extends JFrame{
 					EmoLogger.enabled = false;
 					startBtt.setText("Start");
 					EmoLogger.closeLogFile();
+					sessionLbl.setText("Session" + Integer.toString(++sNumber));
 				}
 				else{
 					EmoLogger.enabled = true;
 					startBtt.setText("Stop");
 					cnt = 0;
 					try {
-						EmoLogger.openLogFile();
+						EmoLogger.openLogFile(usrInput.getText());
+						EmoLogger.print(sessionLbl.getText());
 						EmoLogger.print(labelList.getSelectedItem().toString());
 					} catch (FileNotFoundException e1) {
 						// TODO Auto-generated catch block
@@ -94,7 +85,8 @@ public class LoggerInterface extends JFrame{
         
         final JButton showBtt = new JButton("Show data");
         showBtt.setSize(InterfaceVariables.WIDTH_BUTTON, InterfaceVariables.HEIGHT_BUTTON);
-        showBtt.addActionListener(new ActionListener() {		
+        // TODO
+        /*showBtt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {	
 				if(!EmoLogger.enabled){
@@ -112,14 +104,20 @@ public class LoggerInterface extends JFrame{
 					}
 				}
 			}
-		});
-        
+		});*/
+
+        JPanel usrPane = new JPanel(new GridLayout(1, 3, 5, 5));
+        usrPane.add(usrLbl);
+        usrPane.add(usrInput);
+		usrPane.add(sessionLbl);
         
         JPanel labelsPane = new JPanel(new GridLayout(0, 2, 5, 5));
         labelsPane.add(listLbl);
         labelsPane.add(labelList);
         labelsPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
+
+        logPane.add(usrPane);
+        //logPane.add(sessionLbl);
         logPane.add(labelsPane);
         logPane.add(time);
         
@@ -127,7 +125,7 @@ public class LoggerInterface extends JFrame{
         logPane.add(showBtt);
         
         logPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); 
-        logPane.setSize(400, 100);
+        logPane.setSize(400, 150);
         add(logPane);
         
         // user settings

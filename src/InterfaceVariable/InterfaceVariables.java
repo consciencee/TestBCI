@@ -3,8 +3,7 @@ package InterfaceVariable;
 import java.util.ArrayList;
 
 import Commands.Commands;
-import ExampleAPIFiles.EmoState;
-import ExampleAPIFiles.EmoState.IEE_MentalCommandAction_t;
+import EmotivAPIFiles.EmoState.IEE_MentalCommandAction_t;
 
 public class InterfaceVariables{
 	// button size and location
