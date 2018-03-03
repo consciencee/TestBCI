@@ -130,7 +130,7 @@ public class LoggerInterface extends JFrame{
         WindowListener wndCloser = new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 InterfaceVariables.flagEndCycle = 1;
-                Edk.INSTANCE.IEE_EngineDisconnect();
+                Edk.INSTANCE.EE_EngineDisconnect();
                 e.getWindow().setVisible(false);
                 System.exit(0);
             }

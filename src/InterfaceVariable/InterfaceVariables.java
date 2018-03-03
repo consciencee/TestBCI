@@ -3,7 +3,7 @@ package InterfaceVariable;
 import java.util.ArrayList;
 
 import Commands.Commands;
-import EmotivAPIFiles.EmoState.IEE_MentalCommandAction_t;
+//import EmotivAPIFiles.EmoState.EE_CognitivAction_t;
 
 public class InterfaceVariables{
 	// button size and location
@@ -27,8 +27,8 @@ public class InterfaceVariables{
 	public static final int Index_MIND_CMD_2 = 2;
 	public static final int Index_MIND_CMD_3 = 3;
 	public static final int Index_MIND_CMD_4 = 4;
-	public static int [] mindCommandsActions = {-1, IEE_MentalCommandAction_t.MC_PUSH.ToInt(), IEE_MentalCommandAction_t.MC_PULL.ToInt(),
-		IEE_MentalCommandAction_t.MC_ROTATE_LEFT.ToInt(), IEE_MentalCommandAction_t.MC_ROTATE_RIGHT.ToInt()};
+	//public static int [] mindCommandsActions = {-1, IEE_MentalCommandAction_t.MC_PUSH.ToInt(), IEE_MentalCommandAction_t.MC_PULL.ToInt(),
+	//	IEE_MentalCommandAction_t.MC_ROTATE_LEFT.ToInt(), IEE_MentalCommandAction_t.MC_ROTATE_RIGHT.ToInt()};
 	
 	// settings
 	public static String [] optionsMindTrained = {"(None)","MIND_CMD_1","MIND_CMD_2","MIND_CMD_3","MIND_CMD_4"};

@@ -12,8 +12,8 @@ public class EmoEventLoop {
     private boolean connected = false;
 
     public EmoEventLoop (){
-        eEvent = Edk.INSTANCE.IEE_EmoEngineEventCreate();
-        eState = Edk.INSTANCE.IEE_EmoStateCreate();
+        eEvent = Edk.INSTANCE.EE_EmoEngineEventCreate();
+        eState = Edk.INSTANCE.EE_EmoStateCreate();
         state = 0;
         Variable.userID = new IntByReference(0);
 
@@ -21,7 +21,7 @@ public class EmoEventLoop {
     }
 
     public boolean connect(){
-        if (Edk.INSTANCE.IEE_EngineConnect("Emotiv Systems-5") !=
+        if (Edk.INSTANCE.EE_EngineConnect("Emotiv Systems-5") !=
                 EdkErrorCode.EDK_OK.ToInt()) {
             System.out.println("Emotiv Engine start up failed.");
             connected = false;
@@ -40,15 +40,15 @@ public class EmoEventLoop {
 
         while (InterfaceVariables.flagEndCycle == 0){	// endless loop
 
-            state = Edk.INSTANCE.IEE_EngineGetNextEvent(eEvent);
+            state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
 
             if (state == EdkErrorCode.EDK_OK.ToInt()) {
 
                 printContactQuality(eState);
 
-                int eventType = Edk.INSTANCE.IEE_EmoEngineEventGetType(eEvent);
+                int eventType = Edk.INSTANCE.EE_EmoEngineEventGetType(eEvent);
 
-                if(eventType == Edk.IEE_Event_t.IEE_EmoStateUpdated.ToInt())
+                if(eventType == Edk.EE_Event_t.EE_EmoStateUpdated.ToInt())
                     logEmoState(startTime);
 
                 try {
@@ -68,11 +68,12 @@ public class EmoEventLoop {
     private static void printContactQuality(Pointer eState){
         //5 channels: AF3, AF4, T7, T8, Pz
         //2 references: In the CMS/DRL noise cancellation configuration
-        int af3Level = EmoState.INSTANCE.IS_GetContactQuality(eState, EmoState.IEE_InputChannels_t.IEE_CHAN_AF3.getType());
-        int af4Level = EmoState.INSTANCE.IS_GetContactQuality(eState, EmoState.IEE_InputChannels_t.IEE_CHAN_AF4.getType());
-        int t7Level = EmoState.INSTANCE.IS_GetContactQuality(eState, EmoState.IEE_InputChannels_t.IEE_CHAN_T7.getType());
-        int t8Level = EmoState.INSTANCE.IS_GetContactQuality(eState, EmoState.IEE_InputChannels_t.IEE_CHAN_T8.getType());
-        int pzLevel = EmoState.INSTANCE.IS_GetContactQuality(eState, EmoState.IEE_InputChannels_t.IEE_CHAN_O1.getType());
+        // TO DO: EPOC channels
+        int af3Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_AF3.ordinal());
+        int af4Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_AF4.ordinal());
+        int t7Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_T7.ordinal());
+        int t8Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_T8.ordinal());
+        int pzLevel = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_O1.ordinal());
 
         System.out.println("AF3: " + af3Level + ", AF4: " + af4Level + ", T7: " + t7Level +
                 ", T8: " + t8Level + ", PZ: " + pzLevel);
@@ -80,7 +81,7 @@ public class EmoEventLoop {
 
     private void logEmoState(long startTime){
 
-        Edk.INSTANCE.IEE_EmoEngineEventGetEmoState(eEvent, eState);
+        Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
 
         float excitementLong = PerformanceMetrics.INSTANCE.IS_PerformanceMetricGetExcitementLongTermScore(eState);
         float instantaneousExcitement = PerformanceMetrics.INSTANCE.IS_PerformanceMetricGetInstantaneousExcitementScore(eState);
