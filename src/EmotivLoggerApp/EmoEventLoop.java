@@ -70,17 +70,35 @@ public class EmoEventLoop {
     }
 
     private static void printContactQuality(Pointer eState){
-        //5 channels: AF3, AF4, T7, T8, Pz
-        //2 references: In the CMS/DRL noise cancellation configuration
-        // TO DO: EPOC channels
+
         int af3Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_AF3.ordinal());
         int af4Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_AF4.ordinal());
         int t7Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_T7.ordinal());
         int t8Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_T8.ordinal());
-        int pzLevel = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_O1.ordinal());
+        int o1Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_O1.ordinal());
+        int f7Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_F7.ordinal());
+        int fp1Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_FP1.ordinal());
+        int fp2Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_FP2.ordinal());
+        int f3Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_F3.ordinal());
+        int fc5Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_FC5.ordinal());
+        int p7Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_P7.ordinal());
+        int o2Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_O2.ordinal());
+        int p8Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_P8.ordinal());
+        int fc6Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_FC6.ordinal());
+        int f4Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_F4.ordinal());
+        int f8Level = EmoState.INSTANCE.ES_GetContactQuality(eState, EmoState.EE_InputChannels_t.EE_CHAN_F8.ordinal());
 
-        System.out.println("AF3: " + af3Level + ", AF4: " + af4Level + ", T7: " + t7Level +
-                ", T8: " + t8Level + ", PZ: " + pzLevel);
+        System.out.println("FP1: " + fp1Level + ", FP2: " + fp2Level +
+                ", AF3: " + af3Level + ", AF4: " + af4Level +
+                ", F7: " + f7Level + ", F8: " + f8Level +
+                ", F3: " + f3Level + ", F4: " + f4Level +
+                ", FC5: " + fc5Level + ", FC6: " + fc6Level +
+                ", T7: " + t7Level + ", T8: " + t8Level +
+                ", P7: " + p7Level + ", P8: " + p8Level +
+                ", PZ01: " + o1Level + ", PZ02: " + o2Level);
+
+
+
     }
 
     private void logEmoState(long startTime){
