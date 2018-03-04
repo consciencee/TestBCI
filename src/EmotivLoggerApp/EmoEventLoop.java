@@ -126,7 +126,7 @@ public class EmoEventLoop {
     private void logEEG(long startTime){
 
         Pointer hData = Edk.INSTANCE.EE_DataCreate();
-        IntByReference nSamplesTaken = null;
+        IntByReference nSamplesTaken = new IntByReference(0);
 
         Edk.INSTANCE.EE_DataUpdateHandle(0, hData);
         Edk.INSTANCE.EE_DataGetNumberOfSample(hData, nSamplesTaken);
