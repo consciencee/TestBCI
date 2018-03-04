@@ -4,6 +4,7 @@ import EmotivAPIFiles.*;
 import InterfaceVariable.InterfaceVariables;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
+import EmotivAPIFiles.EmoLogger.Log;
 
 public class EmoEventLoop {
 
@@ -83,26 +84,27 @@ public class EmoEventLoop {
 
         Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
 
-        float excitementLong = PerformanceMetrics.INSTANCE.IS_PerformanceMetricGetExcitementLongTermScore(eState);
-        float instantaneousExcitement = PerformanceMetrics.INSTANCE.IS_PerformanceMetricGetInstantaneousExcitementScore(eState);
-        float relaxation = PerformanceMetrics.INSTANCE.IS_PerformanceMetricGetRelaxationScore(eState);
-        float stress = PerformanceMetrics.INSTANCE.IS_PerformanceMetricGetStressScore(eState);
-        float engagementBoredom = PerformanceMetrics.INSTANCE.IS_PerformanceMetricGetEngagementBoredomScore(eState);
-        float interest = PerformanceMetrics.INSTANCE.IS_PerformanceMetricGetInterestScore(eState);
-        float focus = PerformanceMetrics.INSTANCE.IS_PerformanceMetricGetFocusScore(eState);
+
+        float excitementLong = EmoState.INSTANCE.ES_AffectivGetExcitementLongTermScore(eState);
+        float excitementShort = EmoState.INSTANCE.ES_AffectivGetExcitementShortTermScore(eState);
+        float meditation = EmoState.INSTANCE.ES_AffectivGetMeditationScore(eState);
+        float boredom = EmoState.INSTANCE.ES_AffectivGetEngagementBoredomScore(eState);
+        float frustration = EmoState.INSTANCE.ES_AffectivGetFrustrationScore(eState);
 
         int diffTime = (int)(System.currentTimeMillis() - startTime);
 
         // TODO: change EmoLogger API and usage
         if(EmoLogger.enabled)
-            EmoLogger.print("" + diffTime + ',' +
+            EmoLogger.print(Log.State, "" + diffTime + ',' +
                     excitementLong + ',' +
-                    instantaneousExcitement + ',' +
-                    relaxation + ',' +
-                    stress + ',' +
-                    engagementBoredom + ',' +
-                    interest + ',' +
-                    focus);
+                    excitementShort + ',' +
+                    meditation + ',' +
+                    boredom + ',' +
+                    frustration);
+    }
+
+    private void logEEG(long startTime){
+
     }
 
     public boolean isConnected(){

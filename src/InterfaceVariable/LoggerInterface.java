@@ -11,7 +11,7 @@ import javax.swing.*;
 
 import EmotivAPIFiles.Edk;
 import EmotivAPIFiles.EmoLogger;
-import InterfaceVariable.InterfaceVariables;
+import EmotivAPIFiles.EmoLogger.Log;
 
 public class LoggerInterface extends JFrame{
 	
@@ -73,8 +73,10 @@ public class LoggerInterface extends JFrame{
 					cnt = 0;
 					try {
 						EmoLogger.openLogFile(usrInput.getText());
-						EmoLogger.print(sessionLbl.getText());
-						EmoLogger.print(labelList.getSelectedItem().toString());
+						EmoLogger.print(Log.State, sessionLbl.getText());
+						EmoLogger.print(Log.State, labelList.getSelectedItem().toString());
+                        EmoLogger.print(Log.EEG, sessionLbl.getText());
+                        EmoLogger.print(Log.EEG, labelList.getSelectedItem().toString());
 					} catch (FileNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
