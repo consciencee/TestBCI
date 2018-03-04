@@ -2,8 +2,10 @@ package EmotivLoggerApp;
 
 import EmotivAPIFiles.*;
 import InterfaceVariable.InterfaceVariables;
+
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
+
 import EmotivAPIFiles.EmoLogger.Log;
 
 public class EmoEventLoop {
@@ -11,7 +13,9 @@ public class EmoEventLoop {
     private Pointer eEvent, eState;
     private int state;
     private boolean connected = false;
-
+    private Pointer hData;
+    private IntByReference nSamplesTaken;
+	float secs 				= 1;
     public EmoEventLoop (){
         eEvent = Edk.INSTANCE.EE_EmoEngineEventCreate();
         eState = Edk.INSTANCE.EE_EmoStateCreate();
@@ -38,25 +42,71 @@ public class EmoEventLoop {
             return;
 
         long startTime = System.currentTimeMillis();
-
+        hData = Edk.INSTANCE.EE_DataCreate();
+		Edk.INSTANCE.EE_DataSetBufferSizeInSec(secs);
+		System.out.print("Buffer size in secs: ");
+		System.out.println(secs);
+        nSamplesTaken = new IntByReference(0);
+        
         while (InterfaceVariables.flagEndCycle == 0){
 
-            state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
+           /* state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
 
             if (state == EdkErrorCode.EDK_OK.ToInt()) {
 
-                printContactQuality(eState);
+                //printContactQuality(eState);
 
                 int eventType = Edk.INSTANCE.EE_EmoEngineEventGetType(eEvent);
                 if(eventType == Edk.EE_Event_t.EE_EmoStateUpdated.ToInt()) {
                     logEmoState(startTime);
                     logEEG(startTime);
                 }
-
+            */
                 // logEEG(startTime);
+        	state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
 
+			// New event needs to be handled
+			if (state == EdkErrorCode.EDK_OK.ToInt()) {
+
+				int eventType = Edk.INSTANCE.EE_EmoEngineEventGetType(eEvent);
+				Edk.INSTANCE.EE_EmoEngineEventGetUserId(eEvent, Variable.userID);
+
+				if (eventType == Edk.EE_Event_t.EE_UserAdded.ToInt()){
+					System.out.println("User added");
+					Edk.INSTANCE.EE_DataAcquisitionEnable(Variable.userID.getValue(),true);
+				}				
+				
+				// Log the EmoState if it has been updated
+				if (eventType == Edk.EE_Event_t.EE_EmoStateUpdated.ToInt()) {
+
+					Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
+					
+					 logEmoState(startTime);
+					//if(EmoLogger.enabled)
+					//	EmoLogger.print("" + diffTime + ',' + excitementLong + ',' + instantaneousExcitement + ',' + relaxation + ',' + stress + ',' + engagementBoredom + ',' + interest + ',' + focus);
+					// eeg data
+					Edk.INSTANCE.EE_DataUpdateHandle(0, hData);
+					Edk.INSTANCE.EE_DataGetNumberOfSample(hData, nSamplesTaken);
+
+					if (nSamplesTaken != null) {				
+							if(nSamplesTaken.getValue() == 16){
+								double[] data = new double[nSamplesTaken.getValue()];
+								//System.out.println("sample size = " + nSamplesTaken.getValue());	
+								for (int sampleIdx=0 ; sampleIdx<nSamplesTaken.getValue(); ++ sampleIdx) {
+									for (int i =  0; i < 16; i++) {
+										Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());								
+									}	
+							        int diffTime = (int)(System.currentTimeMillis() - startTime);					        
+									if(EmoLogger.enabled)
+										 EmoLogger.print(Log.EEG, " " + diffTime + " num " + sampleIdx + " data: " + data[sampleIdx]);
+								}
+							}else{
+								System.out.println("sample size = " + nSamplesTaken.getValue());
+							}						
+						}
+				}
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -103,9 +153,7 @@ public class EmoEventLoop {
 
     private void logEmoState(long startTime){
 
-        Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
-
-
+   //     Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
         float excitementLong = EmoState.INSTANCE.ES_AffectivGetExcitementLongTermScore(eState);
         float excitementShort = EmoState.INSTANCE.ES_AffectivGetExcitementShortTermScore(eState);
         float meditation = EmoState.INSTANCE.ES_AffectivGetMeditationScore(eState);
@@ -122,15 +170,8 @@ public class EmoEventLoop {
                     boredom + ',' +
                     frustration);
     }
-
+/*
     private void logEEG(long startTime){
-
-        float secs = 1;
-
-        Pointer hData = Edk.INSTANCE.EE_DataCreate();
-        Edk.INSTANCE.EE_DataSetBufferSizeInSec(secs);
-
-        IntByReference nSamplesTaken = new IntByReference(0);
 
         Edk.INSTANCE.EE_DataUpdateHandle(0, hData);
         Edk.INSTANCE.EE_DataGetNumberOfSample(hData, nSamplesTaken);
@@ -159,13 +200,14 @@ public class EmoEventLoop {
                     int diffTime = (int)(System.currentTimeMillis() - startTime);
 
                     if(EmoLogger.enabled)
-                        EmoLogger.print(Log.EEG, "" + diffTime + data[sampleIdx]);
+                    	System.out.print(Log.EEG + "" + diffTime + data[sampleIdx]);
+                       // EmoLogger.print(Log.EEG, "" + diffTime + data[sampleIdx]);
                 }
             }
         }
 
     }
-
+*/
     public boolean isConnected(){
         return connected;
     }
