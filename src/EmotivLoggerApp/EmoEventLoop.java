@@ -39,7 +39,7 @@ public class EmoEventLoop {
 
         long startTime = System.currentTimeMillis();
 
-        while (InterfaceVariables.flagEndCycle == 0){	// endless loop
+        while (InterfaceVariables.flagEndCycle == 0){
 
             state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
 
@@ -48,9 +48,12 @@ public class EmoEventLoop {
                 printContactQuality(eState);
 
                 int eventType = Edk.INSTANCE.EE_EmoEngineEventGetType(eEvent);
-
-                if(eventType == Edk.EE_Event_t.EE_EmoStateUpdated.ToInt())
+                if(eventType == Edk.EE_Event_t.EE_EmoStateUpdated.ToInt()) {
                     logEmoState(startTime);
+                    logEEG(startTime);
+                }
+
+                // logEEG(startTime);
 
                 try {
                     Thread.sleep(10);
@@ -93,7 +96,6 @@ public class EmoEventLoop {
 
         int diffTime = (int)(System.currentTimeMillis() - startTime);
 
-        // TODO: change EmoLogger API and usage
         if(EmoLogger.enabled)
             EmoLogger.print(Log.State, "" + diffTime + ',' +
                     excitementLong + ',' +
@@ -104,6 +106,41 @@ public class EmoEventLoop {
     }
 
     private void logEEG(long startTime){
+
+        Pointer hData = Edk.INSTANCE.EE_DataCreate();
+        IntByReference nSamplesTaken = null;
+
+        Edk.INSTANCE.EE_DataUpdateHandle(0, hData);
+        Edk.INSTANCE.EE_DataGetNumberOfSample(hData, nSamplesTaken);
+
+        if (nSamplesTaken != null)
+        {
+            if (nSamplesTaken.getValue() != 0) {
+
+                //System.out.print("Updated: ");
+                //System.out.println(nSamplesTaken.getValue());
+
+                double[] data = new double[nSamplesTaken.getValue()];
+                String ans = "";
+                for (int sampleIdx=0 ; sampleIdx<nSamplesTaken.getValue(); ++ sampleIdx) {
+                    for (int i =  0; i < 14; i++) {
+
+                        Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
+                        //System.out.print(data[sampleIdx]);
+                        //System.out.print(",");
+                        if(sampleIdx == 0){
+                            ans += data[sampleIdx];
+                        }
+
+                    }
+
+                    int diffTime = (int)(System.currentTimeMillis() - startTime);
+
+                    if(EmoLogger.enabled)
+                        EmoLogger.print(Log.EEG, "" + diffTime + data[sampleIdx]);
+                }
+            }
+        }
 
     }
 
