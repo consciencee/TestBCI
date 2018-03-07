@@ -21,6 +21,7 @@ public class EmoLogger {
     	eegLogOutput = new PrintWriter(new FileOutputStream(userID + "_eeg_" + logPath, append));
     	append = true;
     	logOutput.println();
+    	eegLogOutput.println();
 	}
 
 	public static void openLogFile() throws FileNotFoundException{

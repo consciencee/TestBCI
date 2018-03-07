@@ -16,6 +16,8 @@ public class EmoEventLoop {
     private Pointer hData;
     private IntByReference nSamplesTaken;
 	float secs 				= 1;
+	int nChannels = 14;
+
     public EmoEventLoop (){
         eEvent = Edk.INSTANCE.EE_EmoEngineEventCreate();
         eState = Edk.INSTANCE.EE_EmoStateCreate();
@@ -88,29 +90,29 @@ public class EmoEventLoop {
 					Edk.INSTANCE.EE_DataUpdateHandle(0, hData);
 					Edk.INSTANCE.EE_DataGetNumberOfSample(hData, nSamplesTaken);
 
-					if (nSamplesTaken != null) {				
-							if(nSamplesTaken.getValue() == 16){
-								double[] data = new double[nSamplesTaken.getValue()];
-								//System.out.println("sample size = " + nSamplesTaken.getValue());	
+					if (nSamplesTaken != null) {
+								double[][] data = new double[nChannels][nSamplesTaken.getValue()];
 								for (int sampleIdx=0 ; sampleIdx<nSamplesTaken.getValue(); ++ sampleIdx) {
-									for (int i =  0; i < 16; i++) {
-										Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());								
+
+								    String sampleData = "";
+									for (int i =  0; i < nChannels; i++) {
+										Edk.INSTANCE.EE_DataGet(hData, i, data[i], nSamplesTaken.getValue());
+										sampleData += "," + data[i];
 									}	
-							        int diffTime = (int)(System.currentTimeMillis() - startTime);					        
-									if(EmoLogger.enabled)
-										 EmoLogger.print(Log.EEG, " " + diffTime + " num " + sampleIdx + " data: " + data[sampleIdx]);
+							        int diffTime = (int)(System.currentTimeMillis() - startTime);
+
+                                    if(EmoLogger.enabled)
+                                        EmoLogger.print(Log.EEG, "" + diffTime + sampleData);
 								}
-							}else{
 								System.out.println("sample size = " + nSamplesTaken.getValue());
-							}						
 						}
 				}
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+//                try {
+//                    Thread.sleep(5);
+//                } catch (InterruptedException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
             }
             else if (state != EdkErrorCode.EDK_NO_EVENT.ToInt()) {
                 System.out.println("Internal error in Emotiv Engine!");
