@@ -97,7 +97,7 @@ public class EmoEventLoop {
 								    String sampleData = "";
 									for (int i =  0; i < nChannels; i++) {
 										Edk.INSTANCE.EE_DataGet(hData, i, data[i], nSamplesTaken.getValue());
-										sampleData += "," + data[i];
+										sampleData += "," + data[i][sampleIdx];
 									}	
 							        int diffTime = (int)(System.currentTimeMillis() - startTime);
 
