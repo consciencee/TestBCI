@@ -99,9 +99,9 @@ public class EmoEventLoop {
 										Edk.INSTANCE.EE_DataGet(hData, i, data[i], nSamplesTaken.getValue());
 										sampleData += "," + data[i][sampleIdx];
 									}	
-							        int diffTime = (int)(System.currentTimeMillis() - startTime);
-
-                                    if(EmoLogger.enabled)
+                                    int diffTime = (int)(System.currentTimeMillis() - startTime);
+                                    
+                                   // if(EmoLogger.enabled)
                                         EmoLogger.print(Log.EEG, "" + diffTime + sampleData);
 								}
 								System.out.println("sample size = " + nSamplesTaken.getValue());
